@@ -14,6 +14,7 @@ const prettierIgnorePath = path.resolve(__dirname, ".prettierignore");
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+  ...tseslint.configs.recommended,
   includeIgnoreFile(prettierIgnorePath),
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
@@ -22,11 +23,11 @@ export default [
     },
     rules: {
       "react-compiler/react-compiler": "error",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   eslintPluginPrettierRecommended,
-  ...tseslint.configs.recommended,
 ];
