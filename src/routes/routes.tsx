@@ -36,7 +36,7 @@ export const CreatePageRoute = createRoute({
   path: "/create",
   component: CreatePage,
   beforeLoad() {
-    return { title: "Thêm người mới" };
+    return { title: "Thêm trích ngang" };
   },
 });
 
