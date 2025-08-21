@@ -42,7 +42,7 @@ const formSchema = z.object({
   donvi: z.string({ error }),
   vanhoa: z.string().min(2, { error }),
   vaodoan: z.string({ error }),
-  vaodang: z.string({ error }),
+  vaodang: z.string({ error }).optional(), // check lại cái này: nếu check doanvien -> ẩn chọn ngày vào đảng -> không submit được | sửa tạm thành optional
   dantoc: z.string({ error }),
   tongiao: z.string({ error }),
   khokhan: z.boolean().default(false).optional(),
@@ -100,8 +100,9 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
         vaodoan: dateToString(values.vaodoan),
         vaodang: dateToString(values.vaodang),
       };
-      onFinish((prev: any) => ({ ...prev, ...data }));
-      onNextPage();
+      // onFinish((prev: any) => ({ ...prev, ...data }));
+      onFinish(data);
+      // onNextPage();
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");

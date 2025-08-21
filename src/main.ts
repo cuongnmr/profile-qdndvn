@@ -11,22 +11,30 @@ import {
 const inDevelopment = process.env.NODE_ENV === "development";
 
 function createWindow() {
+  console.log("🚀 Creating main window...");
   const preload = path.join(__dirname, "preload.js");
+
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       devTools: inDevelopment,
       contextIsolation: true,
-      nodeIntegration: true,
+      nodeIntegration: false, // Sửa từ true thành false
       nodeIntegrationInSubFrames: false,
-
       preload: preload,
     },
     frame: true,
     autoHideMenuBar: true,
   });
-  registerListeners(mainWindow);
+
+  console.log("🔧 Registering IPC listeners...");
+  try {
+    registerListeners(mainWindow);
+    console.log("✅ IPC listeners registered successfully");
+  } catch (error) {
+    console.error("❌ Error registering IPC listeners:", error);
+  }
 
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
@@ -46,7 +54,19 @@ async function installExtensions() {
   }
 }
 
-app.whenReady().then(createWindow).then(installExtensions);
+app
+  .whenReady()
+  .then(() => {
+    console.log("🚀 App is ready, creating window...");
+    createWindow();
+  })
+  .then(() => {
+    console.log("🔧 Installing extensions...");
+    return installExtensions();
+  })
+  .catch((error) => {
+    console.error("❌ Error during app initialization:", error);
+  });
 
 //osX only
 app.on("window-all-closed", () => {
