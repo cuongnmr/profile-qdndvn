@@ -1,4 +1,5 @@
 interface Personal {
+  id: string;
   hoten: string;
   ngaysinh: string;
   nhapngu: string;

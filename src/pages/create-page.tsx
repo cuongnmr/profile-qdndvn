@@ -2,8 +2,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef, useState } from "react";
 import FamilyForm from "./form/family-form";
 import PersonalForm from "./form/personal-form";
+import { User } from "@/types/user";
 const CreatePage = () => {
-  const [data, setData] = useState();
+  const [data, setData] = useState<User | null>(null);
   const [tabIndex, setTabIndex] = useState<string>("personal");
   const div = useRef<HTMLDivElement>(null);
 
@@ -17,7 +18,9 @@ const CreatePage = () => {
       <Tabs value={tabIndex} onValueChange={setTabIndex}>
         <TabsList className="mb-3 w-full">
           <TabsTrigger value="personal">BẢN THÂN</TabsTrigger>
-          <TabsTrigger value="family">GIA ĐÌNH</TabsTrigger>
+          <TabsTrigger value="family" disabled={Boolean(!data || data.id)}>
+            GIA ĐÌNH
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="personal">
           <PersonalForm
@@ -35,9 +38,7 @@ const CreatePage = () => {
               setTabIndex("personal");
               scrollTop();
             }}
-            onFinish={(values) => {
-              setData((prev) => Object.assign({}, prev, values));
-            }}
+            userId={data?.id}
           />
         </TabsContent>
       </Tabs>

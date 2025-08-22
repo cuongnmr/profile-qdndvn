@@ -72,6 +72,11 @@ interface Props {
   defaultData: any;
 }
 
+const dateToString = (value?: string) => {
+  if (value) return String(new Date(value).getTime());
+  return undefined;
+};
+
 export default function PersonalForm({ onFinish, defaultData }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -92,8 +97,18 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createUser(values);
-      // onFinish((prev: any) => ({ ...prev, ...values }));
+      if (defaultData && defaultData.id) {
+        onFinish((prev: any) => ({ ...prev, ...values }));
+      } else {
+        const user = await createUser(
+          Object.assign(values, {
+            ngaysinh: dateToString(values.ngaysinh),
+            vaodoan: dateToString(values.vaodoan),
+            vaodang: dateToString(values.vaodang),
+          }),
+        );
+        onFinish((prev: any) => ({ ...prev, ...values, id: user.id }));
+      }
       toast.success("Lưu thành công");
     } catch (error) {
       console.error("Form submission error", error);

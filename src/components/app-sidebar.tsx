@@ -33,7 +33,7 @@ const items = [
   },
   {
     title: "Danh sách",
-    url: "#",
+    url: "users",
     icon: Users,
   },
   {

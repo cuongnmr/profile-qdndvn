@@ -24,6 +24,8 @@ interface ElectronWindow {
 interface UserAPI {
   create: (user: any) => Promise<any>;
   read: () => Promise<any[]>;
+  update: (user: any) => Promise<any>;
+  updateFamily: (id: string, user: any) => Promise<any>;
 }
 
 declare interface Window {

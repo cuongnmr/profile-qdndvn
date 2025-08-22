@@ -10,26 +10,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { updateUserFamily } from "@/helpers/user-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
-  hotenbo: z.string().min(1).optional(),
-  namsinhbo: z.string().min(1).optional(),
-  sdtbo: z.string().min(1).optional(),
-  nghenghiepbo: z.string().min(1).optional(),
-  nammatbo: z.string().min(1).optional(),
-  quequanbo: z.string().min(1).optional(),
-  truquanbo: z.string().min(1).optional(),
-  hotenme: z.string().min(1).optional(),
-  namsinhme: z.string().min(1).optional(),
-  sdtme: z.string().min(1).optional(),
-  nghenghiepme: z.string().min(1).optional(),
-  nammatme: z.string().min(1).optional(),
-  quequanme: z.string().min(1).optional(),
-  truquanme: z.string().min(1).optional(),
+  hotenbo: z.string().optional(),
+  namsinhbo: z.string().optional(),
+  sdtbo: z.string().optional(),
+  nghenghiepbo: z.string().optional(),
+  nammatbo: z.string().optional(),
+  quequanbo: z.string().optional(),
+  truquanbo: z.string().optional(),
+  hotenme: z.string().optional(),
+  namsinhme: z.string().optional(),
+  sdtme: z.string().optional(),
+  nghenghiepme: z.string().optional(),
+  nammatme: z.string().optional(),
+  quequanme: z.string().optional(),
+  truquanme: z.string().optional(),
   con: z.string().optional(),
   anhchiem: z.string().optional(),
 });
@@ -38,25 +39,28 @@ const placeholder = "Nhập thông tin";
 
 interface Props {
   onReturn: () => void;
-  onFinish: (data: any) => void;
+  userId?: string;
 }
 
-export default function FamilyForm({ onReturn, onFinish }: Props) {
+export default function FamilyForm({ onReturn, userId }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      onFinish(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
+      if (!userId) {
+        throw new Error("Chưa cung cấp user id!");
+      }
+      await updateUserFamily(userId, values);
+      toast.success("Lưu thành công!");
     } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.error("Form submission error", error);
+        toast.error("Failed to submit the form. Please try again.");
+      }
     }
   }
 

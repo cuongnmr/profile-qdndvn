@@ -37,7 +37,7 @@ export function getDB() {
 
 export function saveUser(user: User): User {
   const db = getDB();
-  const data = { id: nanoid(), ...user };
+  const data = { ...user, id: nanoid() };
   db.data.users.push(data);
   db.write();
   return data;
@@ -48,4 +48,21 @@ export function getUsers(): User[] {
   const db = getDB();
   db.read(); // Đảm bảo đọc dữ liệu mới nhất.
   return db.data.users;
+}
+
+export function updateUserFamily(userId: string, dto: any): User | null {
+  const db = getDB();
+  const user = db.data.users.find((u) => u.id === userId);
+  if (user) {
+    // Cập nhật dữ liệu
+    console.log(dto, userId);
+    Object.assign(user, dto);
+
+    // Ghi lại vào file
+    db.write();
+
+    return user;
+  } else {
+    return null;
+  }
 }
