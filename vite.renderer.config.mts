@@ -11,6 +11,21 @@ export default defineConfig({
         plugins: [["babel-plugin-react-compiler"]],
       },
     }),
+    {
+      name: "ignore-db-json-hmr",
+      handleHotUpdate({ file }) {
+        // Chuẩn hóa đường dẫn và kiểm tra xem có phải file db/db.json không
+        const relativePath = path.relative(process.cwd(), file);
+
+        if (relativePath.includes("db.json")) {
+          // Ngăn không cho HMR hoặc reload trang
+          return [];
+        }
+
+        // Ngược lại, cho Vite xử lý như bình thường
+        return;
+      },
+    },
   ],
   resolve: {
     preserveSymlinks: true,

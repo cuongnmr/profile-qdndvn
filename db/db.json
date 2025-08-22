@@ -1,0 +1,48 @@
+{
+  "users": [
+    {
+      "id": "Gd1ftTId2QNQQJBE7AMOe",
+      "hoten": "acadv",
+      "ngaysinh": "1111-11-11",
+      "nhapngu": "111111",
+      "capbac": "B1",
+      "chucvu": "cp",
+      "donvi": "c4",
+      "vanhoa": "12",
+      "dantoc": "Kinh",
+      "tongiao": "Không",
+      "doandang": "doanvien",
+      "thanhphan": "Bần nông",
+      "thuongtru": "swse",
+      "truocnhapngu": "wev",
+      "nuocngoai": "Không",
+      "laodongchinh": false,
+      "nguoithandinuocngoai": "Không",
+      "bomebichatdocdacam": "Không",
+      "conguoitrongquandoi": "không",
+      "phatgiamcaitao": "Không"
+    },
+    {
+      "id": "iu_Udg-0z8XjOzCEatvz7",
+      "hoten": "sdv",
+      "ngaysinh": "1111-11-12",
+      "nhapngu": "23r23a",
+      "capbac": "3/",
+      "chucvu": "weaaa",
+      "donvi": "c4",
+      "vanhoa": "12",
+      "dantoc": "Kinh",
+      "tongiao": "Không",
+      "doandang": "doanvien",
+      "thanhphan": "Bần nông",
+      "thuongtru": "wewef",
+      "truocnhapngu": "wfe",
+      "nuocngoai": "Không",
+      "laodongchinh": false,
+      "nguoithandinuocngoai": "Không",
+      "bomebichatdocdacam": "Không",
+      "conguoitrongquandoi": "không",
+      "phatgiamcaitao": "Không"
+    }
+  ]
+}

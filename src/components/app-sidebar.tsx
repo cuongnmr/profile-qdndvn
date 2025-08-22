@@ -27,7 +27,7 @@ const items = [
     icon: Home,
   },
   {
-    title: "Tạo mới",
+    title: "Thêm trích ngang",
     url: "/create",
     icon: CirclePlus,
   },

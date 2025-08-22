@@ -1,8 +1,3 @@
-import React from "react";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +9,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const formSchema = z.object({
   hotenbo: z.string().min(1).optional(),
@@ -23,16 +23,32 @@ const formSchema = z.object({
   nammatbo: z.string().min(1).optional(),
   quequanbo: z.string().min(1).optional(),
   truquanbo: z.string().min(1).optional(),
+  hotenme: z.string().min(1).optional(),
+  namsinhme: z.string().min(1).optional(),
+  sdtme: z.string().min(1).optional(),
+  nghenghiepme: z.string().min(1).optional(),
+  nammatme: z.string().min(1).optional(),
+  quequanme: z.string().min(1).optional(),
+  truquanme: z.string().min(1).optional(),
+  con: z.string().optional(),
+  anhchiem: z.string().optional(),
 });
 
-export default function FamilyForm() {
+const placeholder = "Nhập thông tin";
+
+interface Props {
+  onReturn: () => void;
+  onFinish: (data: any) => void;
+}
+
+export default function FamilyForm({ onReturn, onFinish }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
+      onFinish(values);
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -48,10 +64,11 @@ export default function FamilyForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto max-w-lg space-y-8"
+        className="mx-auto max-w-lg space-y-4"
       >
+        {/* dad */}
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-4">
+          <div className="col-span-6">
             <FormField
               control={form.control}
               name="hotenbo"
@@ -59,11 +76,7 @@ export default function FamilyForm() {
                 <FormItem>
                   <FormLabel>Họ tên bố</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Nhập thông tin"
-                      type="text"
-                      {...field}
-                    />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -72,7 +85,7 @@ export default function FamilyForm() {
             />
           </div>
 
-          <div className="col-span-4">
+          <div className="col-span-2">
             <FormField
               control={form.control}
               name="namsinhbo"
@@ -80,7 +93,7 @@ export default function FamilyForm() {
                 <FormItem>
                   <FormLabel>Năm sinh</FormLabel>
                   <FormControl>
-                    <Input placeholder="" type="text" {...field} />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -97,7 +110,7 @@ export default function FamilyForm() {
                 <FormItem>
                   <FormLabel>SĐT</FormLabel>
                   <FormControl>
-                    <Input placeholder="" type="text" {...field} />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -108,7 +121,7 @@ export default function FamilyForm() {
         </div>
 
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6">
+          <div className="col-span-9">
             <FormField
               control={form.control}
               name="nghenghiepbo"
@@ -116,11 +129,7 @@ export default function FamilyForm() {
                 <FormItem>
                   <FormLabel>Nghề nghiệp</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Nhập thông tin"
-                      type="text"
-                      {...field}
-                    />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -129,13 +138,13 @@ export default function FamilyForm() {
             />
           </div>
 
-          <div className="col-span-6">
+          <div className="col-span-3">
             <FormField
               control={form.control}
               name="nammatbo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Năm mất</FormLabel>
+                  <FormLabel>Năm mất?</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -154,7 +163,7 @@ export default function FamilyForm() {
             <FormItem>
               <FormLabel>Quê quán</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Xóm, xã, tỉnh</FormDescription>
               <FormMessage />
@@ -169,7 +178,7 @@ export default function FamilyForm() {
             <FormItem>
               <FormLabel>Trú quán</FormLabel>
               <FormControl>
-                <Input placeholder="" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -177,21 +186,18 @@ export default function FamilyForm() {
           )}
         />
 
-        {/* ----------------------------------- */}
+        {/* mom */}
+
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-4">
+          <div className="col-span-6">
             <FormField
               control={form.control}
-              name="hotenbo"
+              name="hotenme"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Họ tên bố</FormLabel>
+                  <FormLabel>Họ tên mẹ</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Nhập thông tin"
-                      type="text"
-                      {...field}
-                    />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -200,15 +206,15 @@ export default function FamilyForm() {
             />
           </div>
 
-          <div className="col-span-4">
+          <div className="col-span-2">
             <FormField
               control={form.control}
-              name="namsinhbo"
+              name="namsinhme"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Năm sinh</FormLabel>
                   <FormControl>
-                    <Input placeholder="" type="text" {...field} />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -220,12 +226,12 @@ export default function FamilyForm() {
           <div className="col-span-4">
             <FormField
               control={form.control}
-              name="sdtbo"
+              name="sdtme"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>SĐT</FormLabel>
                   <FormControl>
-                    <Input placeholder="" type="text" {...field} />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -236,19 +242,15 @@ export default function FamilyForm() {
         </div>
 
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6">
+          <div className="col-span-9">
             <FormField
               control={form.control}
-              name="nghenghiepbo"
+              name="nghenghiepme"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nghề nghiệp</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Nhập thông tin"
-                      type="text"
-                      {...field}
-                    />
+                    <Input placeholder={placeholder} type="text" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -257,13 +259,13 @@ export default function FamilyForm() {
             />
           </div>
 
-          <div className="col-span-6">
+          <div className="col-span-3">
             <FormField
               control={form.control}
-              name="nammatbo"
+              name="nammatme"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Năm mất</FormLabel>
+                  <FormLabel>Năm mất?</FormLabel>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
@@ -277,12 +279,12 @@ export default function FamilyForm() {
 
         <FormField
           control={form.control}
-          name="quequanbo"
+          name="quequanme"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Quê quán</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Xóm, xã, tỉnh</FormDescription>
               <FormMessage />
@@ -292,12 +294,12 @@ export default function FamilyForm() {
 
         <FormField
           control={form.control}
-          name="truquanbo"
+          name="truquanme"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Trú quán</FormLabel>
               <FormControl>
-                <Input placeholder="" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -305,7 +307,56 @@ export default function FamilyForm() {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        {/* siblings */}
+        <FormField
+          control={form.control}
+          name="anhchiem"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Thông tin anh chị em trong gia đình</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Họ tên, năm sinh, nghề nghiệp"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Ví dụ: Anh trai Nguyễn Văn A, 1996, Công nhân
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* child */}
+        <FormField
+          control={form.control}
+          name="con"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Thông tin con</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Họ tên, năm sinh"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Ví dụ: Con trai Nguyễn Văn A, 2020
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex justify-between">
+          <Button type="button" onClick={onReturn} variant="outline">
+            Quay lại
+          </Button>
+          <Button type="submit">Lưu</Button>
+        </div>
       </form>
     </Form>
   );

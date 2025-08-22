@@ -1,8 +1,8 @@
 {
-  "name": "electron-shadcn",
-  "productName": "electron-shadcn Template",
+  "name": "users-manangement",
+  "productName": "Users Management",
   "version": "1.0.0",
-  "description": "Electron Forge with shadcn-ui (Vite + Typescript)",
+  "description": "Manage user in one app, work offline with lowdb",
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
@@ -88,7 +88,9 @@
     "electron-squirrel-startup": "^1.0.1",
     "i18next": "^25.3.2",
     "input-otp": "^1.4.2",
+    "lowdb": "^7.0.1",
     "lucide-react": "^0.536.0",
+    "nanoid": "^5.1.5",
     "next-themes": "^0.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

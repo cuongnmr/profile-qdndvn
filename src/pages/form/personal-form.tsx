@@ -24,12 +24,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { createUser } from "@/helpers/user-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const error = "Chưa đủ thông tin";
+const error = "Chưa đủ thông tin",
+  placeholder = "Nhập thông tin";
 
 const formSchema = z.object({
   hoten: z.string({
@@ -41,13 +44,12 @@ const formSchema = z.object({
   chucvu: z.string({ error }),
   donvi: z.string({ error }),
   vanhoa: z.string().min(2, { error }),
-  vaodoan: z.string({ error }),
-  vaodang: z.string({ error }),
+  vaodoan: z.string({ error }).optional(),
+  vaodang: z.string({ error }).optional(),
   dantoc: z.string({ error }),
   tongiao: z.string({ error }),
-  khokhan: z.boolean().default(false).optional(),
+  khokhan: z.string().optional(),
   doandang: z.string().optional(),
-  motakhokhan: z.string().optional(),
   sohieuqn: z.string({ error }).optional(),
   capbacheso: z.string({ error }).optional(),
   thanhphan: z.string({ error }),
@@ -67,14 +69,10 @@ const formSchema = z.object({
 
 interface Props {
   onFinish: (data: any) => void;
-  onNextPage: () => void;
+  defaultData: any;
 }
 
-function dateToString(param?: string) {
-  return param ? new Date(param).getTime().toString() : undefined;
-}
-
-export default function PersonalForm({ onFinish, onNextPage }: Props) {
+export default function PersonalForm({ onFinish, defaultData }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,16 +90,11 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const data = {
-        ...values,
-        ngaysinh: dateToString(values.ngaysinh),
-        vaodoan: dateToString(values.vaodoan),
-        vaodang: dateToString(values.vaodang),
-      };
-      onFinish((prev: any) => ({ ...prev, ...data }));
-      onNextPage();
+      await createUser(values);
+      // onFinish((prev: any) => ({ ...prev, ...values }));
+      toast.success("Lưu thành công");
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
@@ -109,6 +102,12 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
   }
 
   const doanvien = form.watch("doandang") === "doanvien";
+
+  useEffect(() => {
+    if (defaultData && Object.keys(defaultData).length > 0) {
+      form.reset(defaultData);
+    }
+  }, []);
 
   return (
     <Form {...form}>
@@ -125,7 +124,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Họ và tên</FormLabel>
               <FormControl>
-                <Input placeholder="Họ và tên" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -154,7 +153,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
               <FormItem>
                 <FormLabel>Số hiệu quân nhân</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nhập thông tin" type="text" {...field} />
+                  <Input placeholder={placeholder} type="text" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,7 +167,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
               <FormItem>
                 <FormLabel>Cấp bậc, hệ số</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nhập thông tin" type="text" {...field} />
+                  <Input placeholder={placeholder} type="text" {...field} />
                 </FormControl>
                 <FormDescription>Tháng năm nhận</FormDescription>
                 <FormMessage />
@@ -185,7 +184,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
                 <FormLabel>Dân tộc</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Nhập thông tin"
+                    placeholder={placeholder}
                     type="text"
                     list="dantoc"
                     id="dantoc"
@@ -203,7 +202,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
               <FormItem>
                 <FormLabel>Tôn giáo</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nhập thông tin" type="text" {...field} />
+                  <Input placeholder={placeholder} type="text" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -259,6 +258,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
                     <SelectItem value="B2">B2</SelectItem>
                     <SelectItem value="H1">H1</SelectItem>
                     <SelectItem value="H2">H2</SelectItem>
+                    <SelectItem value="H3">H3</SelectItem>
                     <SelectItem value="1/">1/</SelectItem>
                     <SelectItem value="2/">2/</SelectItem>
                     <SelectItem value="3/">3/</SelectItem>
@@ -277,28 +277,22 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Chức vụ</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl className="w-full">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Chức vụ" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="ct">ct</SelectItem>
-                    <SelectItem value="ctv">ctv</SelectItem>
-                    <SelectItem value="cp">cp</SelectItem>
-                    <SelectItem value="ctvp">ctvp</SelectItem>
-                    <SelectItem value="bt">bt</SelectItem>
-                    <SelectItem value="cs">cs</SelectItem>
-                    <SelectItem value="lx">lx</SelectItem>
-                    <SelectItem value="lm">lm</SelectItem>
-                    <SelectItem value="tsc">tsc</SelectItem>
-                    <SelectItem value="ent">ent</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormControl>
+                  <Input
+                    placeholder={placeholder}
+                    type="text"
+                    {...field}
+                    list="chucvus"
+                  />
+                </FormControl>
+                <datalist id="chucvus">
+                  <option value="ct" />
+                  <option value="ctv" />
+                  <option value="cp" />
+                  <option value="ctvp" />
+                  <option value="bt" />
+                  <option value="cs" />
+                </datalist>
                 <FormMessage />
               </FormItem>
             )}
@@ -310,7 +304,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
               <FormItem>
                 <FormLabel>Đơn vị</FormLabel>
                 <FormControl>
-                  <Input placeholder="Nhập thông tin" type="text" {...field} />
+                  <Input placeholder={placeholder} type="text" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -345,7 +339,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Thành phần gia đình</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -360,7 +354,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Nơi ở hiện nay</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Xóm, xã, tỉnh</FormDescription>
               <FormMessage />
@@ -471,7 +465,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Trước khi nhập ngũ làm gì, ở đâu</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -486,7 +480,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Học qua trường nào trong Quân đội</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Thời gian học</FormDescription>
               <FormMessage />
@@ -501,7 +495,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Đã từng đi nước ngoài</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Thời gian đi</FormDescription>
               <FormMessage />
@@ -516,7 +510,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Sở trường</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -550,7 +544,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Có người thân đi nước ngoài không?</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -564,7 +558,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Bố mẹ bị chất độc da cam không?</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
 
               <FormMessage />
@@ -578,7 +572,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Gia đình có người trong quân đội không?</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Cấp bậc, chức vụ, đơn vị</FormDescription>
               <FormMessage />
@@ -592,7 +586,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
             <FormItem>
               <FormLabel>Gia đình có ai bị phạt giam cải tạo không</FormLabel>
               <FormControl>
-                <Input placeholder="Nhập thông tin" type="text" {...field} />
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -607,7 +601,7 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
               <FormLabel>Tóm tắt quá trình công tác trong quân đội</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Nhập thông tin"
+                  placeholder={placeholder}
                   className="resize-none"
                   {...field}
                 />
@@ -618,8 +612,26 @@ export default function PersonalForm({ onFinish, onNextPage }: Props) {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="khokhan"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Hoàn cảnh khó khăn?</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Mô tả hoàn cảnh khó khăn"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="text-right">
-          <Button type="submit">Tiếp theo</Button>
+          <Button type="submit">Lưu</Button>
         </div>
       </form>
     </Form>

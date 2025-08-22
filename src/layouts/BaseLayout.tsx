@@ -22,7 +22,6 @@ export default function BaseLayout({
   children: React.ReactNode;
 }) {
   const [cumb, setCumb] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const matches: any = useRouterState({ select: (s) => s.matches });
   useEffect(() => {
     // Lấy match sâu nhất có context.title hoặc context.getTitle
