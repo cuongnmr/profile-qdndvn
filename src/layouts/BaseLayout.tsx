@@ -34,7 +34,7 @@ export default function BaseLayout({
     <>
       <SidebarProvider className="h-screen">
         <AppSidebar />
-        <SidebarInset>
+        <SidebarInset className="min-w-0">
           <header className="flex h-16 shrink-0 items-center gap-2 border-b">
             <div className="flex items-center gap-2 px-3">
               <SidebarTrigger />
@@ -54,7 +54,7 @@ export default function BaseLayout({
               </Breadcrumb>
             </div>
           </header>
-          <div className="flex-1 overflow-y-auto p-4">{children}</div>
+          <div className="min-w-0 flex-1 overflow-auto p-4">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </>

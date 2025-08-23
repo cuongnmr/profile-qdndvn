@@ -1,5 +1,4 @@
 export const fullColumns = [
-  ["id", "ID"],
   ["hoten", "Họ và tên"],
   ["ngaysinh", "Ngày sinh"],
   ["nhapngu", "Ngày nhập ngũ"],
@@ -20,6 +19,7 @@ export const fullColumns = [
   ["bomebichatdocdacam", "Cha mẹ bị chất độc da cam"],
   ["conguoitrongquandoi", "Có người thân trong quân đội"],
   ["phatgiamcaitao", "Tiền án, cải tạo"],
+  ["khokhan", "Hoàn cảnh khó khăn"],
   ["hotenbo", "Họ tên bố"],
   ["namsinhbo", "Năm sinh bố"],
   ["nghenghiepbo", "Nghề nghiệp bố"],

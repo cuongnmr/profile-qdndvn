@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { shortColumns } from "./columns-def";
+import { User } from "@/types/user";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
@@ -22,7 +24,6 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    filterFn: "includesString",
   },
   {
     accessorKey: "email",
@@ -80,3 +81,10 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
 ];
+
+export function getColumns(): ColumnDef<Partial<User>>[] {
+  return shortColumns.map((col) => ({
+    accessorKey: col[0],
+    header: col[1],
+  }));
+}
