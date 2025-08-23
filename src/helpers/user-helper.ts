@@ -8,6 +8,10 @@ export async function readUser() {
   return await window.userAPI.read();
 }
 
+export async function readUserById(id: string) {
+  return await window.userAPI.readOne(id);
+}
+
 export async function updateUser(user: Partial<User>) {
   return await window.userAPI.update(user);
 }

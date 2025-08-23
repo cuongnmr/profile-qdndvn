@@ -53,7 +53,7 @@ export const UserListRoute = createRoute({
 
 export const UserDetailsRoute = createRoute({
   getParentRoute: () => RootRoute,
-  path: "/user-detail/:id",
+  path: "/user-detail/$userId",
   component: UserDetailsPage,
   beforeLoad() {
     return { title: "Thông tin quân nhân" };

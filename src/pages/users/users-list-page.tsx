@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fullColumns } from "./columns-def";
 import { Input } from "@/components/ui/input";
 import { removeDiacritics } from "@/utils/text";
+import { useNavigate } from "@tanstack/react-router";
 
 function cellValue(key: string, value: string) {
   const doandang: Record<string, string> = {
@@ -43,6 +44,7 @@ function UsersListPage() {
       removeDiacritics(item.hoten).includes(removeDiacritics(filteredText)),
     );
   }, [users, filteredText]);
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-3">
@@ -69,7 +71,12 @@ function UsersListPage() {
                 // @ts-expect-error type
                 const value = item[col[0]];
                 return (
-                  <TableCell key={item.id + col[0]}>
+                  <TableCell
+                    key={item.id + col[0]}
+                    onDoubleClick={() =>
+                      navigate({ to: "/user-detail/" + item.id })
+                    }
+                  >
                     {cellValue(col[0], value)}
                   </TableCell>
                 );

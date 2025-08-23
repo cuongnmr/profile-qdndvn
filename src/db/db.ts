@@ -10,6 +10,8 @@ interface DBData {
   users: User[];
 }
 let db: LowSync<DBData>;
+
+// khởi tạo lowdb
 export function initDb() {
   const appPath = app.getAppPath();
   const dbDir = path.join(appPath, "db");
@@ -35,6 +37,7 @@ export function getDB() {
   return db;
 }
 
+// thêm mới user
 export function saveUser(user: User): User {
   const db = getDB();
   const data = { ...user, id: nanoid() };
@@ -50,6 +53,7 @@ export function getUsers(): User[] {
   return db.data.users;
 }
 
+// cập nhật thông tin gia đình user
 export function updateUserFamily(userId: string, dto: any): User | null {
   const db = getDB();
   const user = db.data.users.find((u) => u.id === userId);
@@ -65,4 +69,11 @@ export function updateUserFamily(userId: string, dto: any): User | null {
   } else {
     return null;
   }
+}
+
+// tìm user theo id
+export function readOneUser(userId: string): User | null {
+  const db = getDB();
+  db.read(); // Đảm bảo đọc dữ liệu mới nhất.
+  return db.data.users.find((item) => item.id === userId) ?? null;
 }
