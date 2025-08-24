@@ -7,8 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { readUserById } from "@/helpers/user-helper";
 import { formatDate } from "@/utils/date-fns";
 import { mapCapBac, mapChucVu, mapDoanDang, mapDonVi } from "@/utils/mapping";
@@ -16,6 +14,7 @@ import { useParams, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Download, Edit, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { userProps } from "./form-schema";
+import { Input } from "@/components/ui/input";
 
 async function fetchUser(userId: string) {
   try {
@@ -58,6 +57,7 @@ function getValue(key: string, input?: string) {
 const UserDetailsPage = () => {
   const { userId } = useParams({ from: "/user-detail/$userId" });
   const [user, setUser] = useState<Record<string, string> | null>(null);
+  const [editMode, setEditMode] = useState(false);
   const { history } = useRouter();
   useEffect(() => {
     if (userId) {
@@ -69,7 +69,9 @@ const UserDetailsPage = () => {
     };
   }, [userId]);
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    setEditMode(true);
+  };
 
   const handleDelete = () => {
     // Mock delete functionality
@@ -87,8 +89,8 @@ const UserDetailsPage = () => {
     <>
       <Card className="mb-3">
         <CardHeader>
-          <CardTitle>Chi tiết người dùng</CardTitle>
-          <CardDescription>ID: {user?.id}</CardDescription>
+          <CardTitle>Chi tiết quân nhân</CardTitle>
+          <CardDescription>{user?.hoten}</CardDescription>
           <CardAction>
             <Button variant="ghost" onClick={() => history.go(-1)}>
               <ArrowLeft className="h-4 w-4" />
@@ -121,21 +123,36 @@ const UserDetailsPage = () => {
           </>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Thông tin cá nhân</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {user &&
-            Object.entries(userProps).map(([key, value]) => (
-              <div key={key} className="grid w-full items-center gap-3">
-                <Label>{value}</Label>
-                <Input type="text" readOnly value={getValue(key, user[key])} />
-              </div>
-            ))}
-        </CardContent>
-      </Card>
+      {user && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Thông tin cá nhân</CardTitle>
+            <CardDescription>ID: {user.id}</CardDescription>
+          </CardHeader>
+          <CardContent className="divide-y text-sm">
+            {user &&
+              Object.entries(userProps).map(([key, value]) => (
+                <div
+                  key={key}
+                  className="hover:bg-accent hover:text-accent-foreground flex"
+                >
+                  <div className="basis-1/3 px-1 py-3 font-medium">{value}</div>
+                  <div className="basis-2/3 px-1 py-3">
+                    {editMode ? (
+                      <Input
+                        type="text"
+                        className="bg-background"
+                        value={user[key]}
+                      />
+                    ) : (
+                      getValue(key, user[key])
+                    )}
+                  </div>
+                </div>
+              ))}
+          </CardContent>
+        </Card>
+      )}
     </>
   );
 };

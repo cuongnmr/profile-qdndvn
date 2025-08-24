@@ -232,19 +232,7 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
             <FormItem>
               <FormLabel>Nhập ngũ</FormLabel>
               <FormControl>
-                <InputOTP maxLength={6} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                  </InputOTPGroup>
-                  <span>/</span>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
+                <Input placeholder={placeholder} type="text" {...field} />
               </FormControl>
               <FormDescription>Tháng / năm</FormDescription>
               <FormMessage />
