@@ -4,6 +4,7 @@ import {
   readOneUser,
   removeUser,
   saveUser,
+  updateBulkUser,
   updateUser,
 } from "@/db/db";
 import { ipcMain } from "electron";
@@ -12,6 +13,7 @@ import {
   USER_DELETE_CHANNEL,
   USER_READ_CHANNEL,
   USER_READ_ONE_CHANNEL,
+  USER_UPDATE_BULK_CHANNEL,
   USER_UPDATE_CHANNEL,
 } from "./user-channels";
 
@@ -61,6 +63,14 @@ export function addUserEventListeners() {
         throw new Error("Không tìm thấy người dùng id " + id);
       }
       return { success: true, user };
+    } catch (error) {
+      return { success: false, error };
+    }
+  });
+  ipcMain.handle(USER_UPDATE_BULK_CHANNEL, (_event, data) => {
+    try {
+      const users = updateBulkUser(data);
+      return { success: true, users };
     } catch (error) {
       return { success: false, error };
     }

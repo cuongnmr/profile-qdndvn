@@ -143,29 +143,33 @@ const UserDetailsPage = () => {
             <CardTitle>Thông tin cá nhân</CardTitle>
             <CardDescription>ID: {user.id}</CardDescription>
           </CardHeader>
-          <CardContent className="divide-y text-sm">
-            {user &&
-              Object.entries(userProps).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="hover:bg-accent hover:text-accent-foreground flex"
-                >
-                  <div className="basis-1/3 px-1 py-3 font-medium">{value}</div>
-                  <div className="basis-2/3 px-1 py-3">
-                    {isEditing ? (
-                      <Input
-                        type="text"
-                        className="bg-background"
-                        value={user[key]}
-                        name={key}
-                        onChange={handleChange}
-                      />
-                    ) : (
-                      getValue(key, user[key])
-                    )}
-                  </div>
-                </div>
-              ))}
+          <CardContent>
+            <ul className="divide-y text-sm">
+              {user &&
+                Object.entries(userProps).map(([key, value]) => (
+                  <li
+                    key={key}
+                    className="hover:bg-accent hover:text-accent-foreground flex"
+                  >
+                    <div className="basis-1/3 px-1 py-3 font-medium">
+                      {value}
+                    </div>
+                    <div className="basis-2/3 px-1 py-3">
+                      {isEditing ? (
+                        <Input
+                          type="text"
+                          className="bg-background"
+                          value={user[key]}
+                          name={key}
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        getValue(key, user[key])
+                      )}
+                    </div>
+                  </li>
+                ))}
+            </ul>
           </CardContent>
         </Card>
       )}

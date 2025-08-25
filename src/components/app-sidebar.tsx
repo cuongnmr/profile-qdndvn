@@ -38,7 +38,7 @@ const items = [
   },
   {
     title: "Chất lượng chính trị",
-    url: "#",
+    url: "/clct",
     icon: ChartBar,
   },
   {

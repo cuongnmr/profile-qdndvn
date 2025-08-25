@@ -4,6 +4,7 @@ import { createRoute } from "@tanstack/react-router";
 import HomePage from "../pages/HomePage";
 import { RootRoute } from "./__root";
 import UserDetailsPage from "@/pages/user-details/user-details-page";
+import CLCTPage from "@/pages/clct/clct-page";
 
 // TODO: Steps to add a new route:
 // 1. Create a new page component in the '../pages/' directory (e.g., NewPage.tsx)
@@ -60,9 +61,19 @@ export const UserDetailsRoute = createRoute({
   },
 });
 
+export const CLCTRoute = createRoute({
+  getParentRoute: () => RootRoute,
+  path: "/clct",
+  component: CLCTPage,
+  beforeLoad() {
+    return { title: "Chất lượng chính trị" };
+  },
+});
+
 export const rootTree = RootRoute.addChildren([
   HomeRoute,
   CreatePageRoute,
   UserListRoute,
   UserDetailsRoute,
+  CLCTRoute,
 ]);

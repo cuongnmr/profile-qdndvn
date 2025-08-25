@@ -3,6 +3,7 @@ import {
   USER_DELETE_CHANNEL,
   USER_READ_CHANNEL,
   USER_READ_ONE_CHANNEL,
+  USER_UPDATE_BULK_CHANNEL,
   USER_UPDATE_CHANNEL,
 } from "./user-channels";
 
@@ -16,5 +17,7 @@ export function exposeUserContext() {
     remove: (userId: string) => ipcRenderer.invoke(USER_DELETE_CHANNEL, userId),
     update: (id: string, data: any) =>
       ipcRenderer.invoke(USER_UPDATE_CHANNEL, id, data),
+    updateBulk: (data: any[]) =>
+      ipcRenderer.invoke(USER_UPDATE_BULK_CHANNEL, data),
   });
 }

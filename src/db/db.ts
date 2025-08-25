@@ -67,6 +67,17 @@ export function updateUser(userId: string, dto: any): User | null {
   }
 }
 
+// cập nhật nhiều user
+export function updateBulkUser(dto: any[]): User[] {
+  const db = getDB();
+  const users = (db.data.users = db.data.users.map((user) => {
+    const update = dto.find((u) => u.id === user.id);
+    return update ? { ...user, ...update } : user;
+  }));
+  db.write();
+  return users;
+}
+
 // tìm user theo id
 export function readOneUser(userId: string): User | null {
   const db = getDB();
@@ -74,9 +85,11 @@ export function readOneUser(userId: string): User | null {
   return db.data.users.find((item) => item.id === userId) ?? null;
 }
 
-// tìm user theo id
+// xóa user theo id
 export function removeUser(userId: string): User[] | null {
   const db = getDB();
   db.read(); // Đảm bảo đọc dữ liệu mới nhất.
-  return db.data.users.filter((item) => item.id !== userId) ?? null;
+  db.data.users = db.data.users.filter((item) => item.id !== userId) ?? null;
+  db.write();
+  return db.data.users;
 }

@@ -34,7 +34,8 @@
       "nghenghiepme": "Làm ruộng",
       "quequanme": "Ngòi Lan, Quang Trung, Bắc Ninh",
       "truquanme": "Ngòi Lan, Quang Trung, Bắc Ninh",
-      "anhchiem": "Anh trai Nguyễn Văn Hữu, 1996, công nhân"
+      "anhchiem": "Anh trai Nguyễn Văn Hữu, 1996, công nhân",
+      "bienche": "b2"
     },
     {
       "id": "ARQSmx_eBCp5wFjt28NyR",
@@ -56,7 +57,8 @@
       "nguoithandinuocngoai": "Không",
       "bomebichatdocdacam": "Không",
       "conguoitrongquandoi": "không",
-      "phatgiamcaitao": "Không"
+      "phatgiamcaitao": "Không",
+      "bienche": "b2"
     },
     {
       "hoten": "Lê Đức Nhất",
@@ -90,7 +92,8 @@
       "truquanme": "Dân Tiến, Võ Nhai, Thái Nguyên",
       "hotenme": "Đặng Thị Thu",
       "namsinhme": "1981",
-      "nghenghiepme": "Làm ruộng"
+      "nghenghiepme": "Làm ruộng",
+      "bienche": "b2"
     },
     {
       "hoten": "Phạm Thanh Sơn",

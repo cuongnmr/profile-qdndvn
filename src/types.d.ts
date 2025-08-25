@@ -25,7 +25,7 @@ interface UserAPI {
   create: (user: any) => Promise<any>;
   read: () => Promise<any[]>;
   update: (id: string, user: any) => Promise<any>;
-  updateFamily: (id: string, user: any) => Promise<any>;
+  updateBulk: (users: any[]) => Promise<any>;
   readOne: (id: string) => Promise<any>;
   remove: (id: string) => Promise<any>;
 }

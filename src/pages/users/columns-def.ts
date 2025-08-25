@@ -4,6 +4,7 @@ export const fullColumns = [
   ["nhapngu", "Ngày nhập ngũ"],
   ["capbac", "Cấp bậc"],
   ["chucvu", "Chức vụ"],
+  ["bienche", "Biên chế"],
   ["donvi", "Đơn vị"],
   ["vanhoa", "Trình độ văn hóa"],
   ["vaodoan", "Ngày vào Đoàn"],

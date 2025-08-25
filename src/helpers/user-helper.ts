@@ -23,3 +23,8 @@ export async function deleteUser(id: string) {
 export async function updateUser(id: string, user: Partial<User>) {
   return await window.userAPI.update(id, user);
 }
+
+// cập nhật nhiều user
+export async function updateBulkUser(users: Partial<User[]>) {
+  return await window.userAPI.updateBulk(users);
+}
