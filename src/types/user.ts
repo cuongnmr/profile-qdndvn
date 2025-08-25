@@ -28,6 +28,8 @@ interface Personal {
   conguoitrongquandoi?: string;
   phatgiamcaitao?: string;
   tomtatcongtac?: string;
+  bienche?: string;
+  trinhdo?: string;
 }
 
 interface Parent {

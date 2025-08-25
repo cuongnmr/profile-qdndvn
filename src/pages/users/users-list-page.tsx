@@ -32,6 +32,7 @@ const mapping: Record<string, string> = {
   bienche: "Biên chế",
   capbac: "Cấp bậc",
   chucvu: "Chức vụ",
+  trinhdo: "Trình độ",
 };
 
 function UsersListPage() {

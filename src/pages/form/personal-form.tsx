@@ -65,6 +65,7 @@ const formSchema = z.object({
   conguoitrongquandoi: z.string().optional(),
   phatgiamcaitao: z.string().optional(),
   tomtatcongtac: z.string().optional(),
+  bienche: z.string().optional(),
 });
 
 interface Props {
@@ -306,7 +307,20 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
           />
         </div>
 
-        <div className="grid grid-cols-2 items-start gap-4">
+        <div className="grid grid-cols-3 items-start gap-4">
+          <FormField
+            control={form.control}
+            name="bienche"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Biên chế</FormLabel>
+                <FormControl>
+                  <Input placeholder={placeholder} type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="vanhoa"
