@@ -27,6 +27,7 @@ interface UserAPI {
   update: (id: string, user: any) => Promise<any>;
   updateFamily: (id: string, user: any) => Promise<any>;
   readOne: (id: string) => Promise<any>;
+  remove: (id: string) => Promise<any>;
 }
 
 declare interface Window {

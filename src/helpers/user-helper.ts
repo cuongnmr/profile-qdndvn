@@ -14,6 +14,11 @@ export async function readUserById(id: string) {
   return await window.userAPI.readOne(id);
 }
 
+// lấy xóa user theo id
+export async function deleteUser(id: string) {
+  return await window.userAPI.remove(id);
+}
+
 // cập nhật thông tin user
 export async function updateUser(id: string, user: Partial<User>) {
   return await window.userAPI.update(id, user);

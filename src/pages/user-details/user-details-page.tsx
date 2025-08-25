@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { readUserById, updateUser } from "@/helpers/user-helper";
-import { useParams, useRouter } from "@tanstack/react-router";
+import { deleteUser, readUserById, updateUser } from "@/helpers/user-helper";
+import { useNavigate, useParams, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Download, Edit, Trash2, X } from "lucide-react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { userProps } from "./form-schema";
@@ -33,6 +33,7 @@ const UserDetailsPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const initData = useRef<Record<string, string> | null>(null);
   const { history } = useRouter();
+  const navigate = useNavigate();
   useEffect(() => {
     if (userId) {
       fetchUser(userId).then((d) => {
@@ -50,16 +51,18 @@ const UserDetailsPage = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     // Mock delete functionality
+    if (!user) return;
     if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
-      console.log("Delete user:", user?.id);
+      await deleteUser(user.id);
+      navigate({ to: "/users" });
     }
   };
 
   const handleExport = () => {
     // Mock export functionality
-    console.log("Export user data");
+    alert("Tính năng đang phát triển");
   };
 
   function handleCancel() {

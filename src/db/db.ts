@@ -73,3 +73,10 @@ export function readOneUser(userId: string): User | null {
   db.read(); // Đảm bảo đọc dữ liệu mới nhất.
   return db.data.users.find((item) => item.id === userId) ?? null;
 }
+
+// tìm user theo id
+export function removeUser(userId: string): User[] | null {
+  const db = getDB();
+  db.read(); // Đảm bảo đọc dữ liệu mới nhất.
+  return db.data.users.filter((item) => item.id !== userId) ?? null;
+}

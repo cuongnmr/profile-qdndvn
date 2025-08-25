@@ -18,7 +18,7 @@ interface Personal {
   thanhphan: string;
   thuongtru: string;
   sothedang?: string;
-  truocnhapngu: string;
+  truocnhapngu?: string;
   truongquandoi?: string;
   nuocngoai?: string;
   sotruong?: string;

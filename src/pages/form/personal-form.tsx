@@ -55,7 +55,7 @@ const formSchema = z.object({
   thanhphan: z.string({ error }),
   thuongtru: z.string({ error }),
   sothedang: z.string().optional(),
-  truocnhapngu: z.string({ error }),
+  truocnhapngu: z.string({ error }).optional(),
   truongquandoi: z.string({ error }).optional(),
   nuocngoai: z.string({ error }).optional(),
   sotruong: z.string({ error }).optional(),
@@ -76,7 +76,7 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      vanhoa: "12",
+      vanhoa: "12/12",
       tongiao: "Không",
       doandang: "doanvien",
       dantoc: "Kinh",
@@ -85,7 +85,7 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
       nuocngoai: "Không",
       nguoithandinuocngoai: "Không",
       bomebichatdocdacam: "Không",
-      conguoitrongquandoi: "không",
+      conguoitrongquandoi: "Không",
       phatgiamcaitao: "Không",
     },
   });
@@ -95,8 +95,10 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
       if (defaultData && defaultData.id) {
         onFinish((prev: any) => ({ ...prev, ...values }));
       } else {
-        const user = await createUser(values);
-        onFinish((prev: any) => ({ ...prev, ...values, id: user.id }));
+        const res = await createUser(values);
+        if (res.success)
+          onFinish((prev: any) => ({ ...prev, ...values, id: res.user.id }));
+        else throw new Error(res.error);
       }
       toast.success("Lưu thành công");
     } catch (error) {

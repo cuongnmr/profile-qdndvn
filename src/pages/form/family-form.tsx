@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateUser } from "@/helpers/user-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -43,6 +44,8 @@ interface Props {
 }
 
 export default function FamilyForm({ onReturn, userId }: Props) {
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -54,6 +57,7 @@ export default function FamilyForm({ onReturn, userId }: Props) {
       }
       await updateUser(userId, values);
       toast.success("Lưu thành công!");
+      navigate({ to: "/users" });
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);

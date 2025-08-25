@@ -1,5 +1,6 @@
 import {
   USER_CREATE_CHANNEL,
+  USER_DELETE_CHANNEL,
   USER_READ_CHANNEL,
   USER_READ_ONE_CHANNEL,
   USER_UPDATE_CHANNEL,
@@ -12,6 +13,7 @@ export function exposeUserContext() {
     read: () => ipcRenderer.invoke(USER_READ_CHANNEL),
     readOne: (userId: string) =>
       ipcRenderer.invoke(USER_READ_ONE_CHANNEL, userId),
+    remove: (userId: string) => ipcRenderer.invoke(USER_DELETE_CHANNEL, userId),
     update: (id: string, data: any) =>
       ipcRenderer.invoke(USER_UPDATE_CHANNEL, id, data),
   });
