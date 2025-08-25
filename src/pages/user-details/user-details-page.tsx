@@ -7,19 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { readUserById } from "@/helpers/user-helper";
-import { formatDate } from "@/utils/date-fns";
-import { mapCapBac, mapChucVu, mapDoanDang, mapDonVi } from "@/utils/mapping";
-import { useParams, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, Download, Edit, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { userProps } from "./form-schema";
 import { Input } from "@/components/ui/input";
+import { readUserById, updateUser } from "@/helpers/user-helper";
+import { useParams, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, Download, Edit, Trash2, X } from "lucide-react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { userProps } from "./form-schema";
+import { getValue } from "@/utils/mapping";
 
 async function fetchUser(userId: string) {
   try {
     const res = await readUserById(userId);
-    console.log(res);
     if (!res.success) {
       throw new Error(res.error);
     }
@@ -29,39 +27,18 @@ async function fetchUser(userId: string) {
   }
 }
 
-function getValue(key: string, input?: string) {
-  if (!input) {
-    return "Chưa có thông tin";
-  }
-  switch (key) {
-    case "ngaysinh":
-    case "vaodoan":
-    case "vaodang":
-      return formatDate(Number(input));
-    case "capbac":
-      return mapCapBac(input);
-    case "chucvu":
-      return mapChucVu(input);
-    case "donvi":
-      return mapDonVi(input);
-    case "doandang":
-      return mapDoanDang(input);
-    case "vanhoa":
-      return input.concat("/12");
-
-    default:
-      return input;
-  }
-}
-
 const UserDetailsPage = () => {
   const { userId } = useParams({ from: "/user-detail/$userId" });
   const [user, setUser] = useState<Record<string, string> | null>(null);
-  const [editMode, setEditMode] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const initData = useRef<Record<string, string> | null>(null);
   const { history } = useRouter();
   useEffect(() => {
     if (userId) {
-      fetchUser(userId).then((d) => setUser(d));
+      fetchUser(userId).then((d) => {
+        setUser(d);
+        initData.current = d;
+      });
     }
 
     return () => {
@@ -70,7 +47,7 @@ const UserDetailsPage = () => {
   }, [userId]);
 
   const handleEdit = () => {
-    setEditMode(true);
+    setIsEditing(true);
   };
 
   const handleDelete = () => {
@@ -84,6 +61,27 @@ const UserDetailsPage = () => {
     // Mock export functionality
     console.log("Export user data");
   };
+
+  function handleCancel() {
+    setUser(initData.current);
+    setIsEditing(false);
+  }
+
+  async function handleSave() {
+    if (!user) return setIsEditing(false);
+    initData.current = { ...user };
+    const res = await updateUser(user.id, user);
+    console.log(res);
+    setIsEditing(false);
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { value, name } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
+  }
 
   return (
     <>
@@ -99,28 +97,41 @@ const UserDetailsPage = () => {
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-row flex-wrap gap-2">
-          <>
-            <Button onClick={handleEdit} className="gap-2">
-              <Edit className="h-4 w-4" />
-              <span className="hidden sm:inline">Chỉnh sửa</span>
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={handleExport}
-              className="gap-2"
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">Xuất</span>
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              className="gap-2"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Xóa</span>
-            </Button>
-          </>
+          {isEditing ? (
+            <>
+              <Button onClick={handleCancel} className="gap-2">
+                <X className="h-4 w-4" />
+                <span className="hidden sm:inline">Hủy</span>
+              </Button>
+              <Button variant="outline" onClick={handleSave} className="gap-2">
+                <Download className="h-4 w-4" />
+                <span className="hidden sm:inline">Lưu</span>
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button onClick={handleEdit} className="gap-2">
+                <Edit className="h-4 w-4" />
+                <span className="hidden sm:inline">Chỉnh sửa</span>
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={handleExport}
+                className="gap-2"
+              >
+                <Download className="h-4 w-4" />
+                <span className="hidden sm:inline">Xuất</span>
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+                className="gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span className="hidden sm:inline">Xóa</span>
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
       {user && (
@@ -138,11 +149,13 @@ const UserDetailsPage = () => {
                 >
                   <div className="basis-1/3 px-1 py-3 font-medium">{value}</div>
                   <div className="basis-2/3 px-1 py-3">
-                    {editMode ? (
+                    {isEditing ? (
                       <Input
                         type="text"
                         className="bg-background"
                         value={user[key]}
+                        name={key}
+                        onChange={handleChange}
                       />
                     ) : (
                       getValue(key, user[key])

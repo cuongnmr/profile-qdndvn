@@ -1,16 +1,10 @@
-import {
-  getUsers,
-  initDb,
-  readOneUser,
-  saveUser,
-  updateUserFamily,
-} from "@/db/db";
+import { getUsers, initDb, readOneUser, saveUser, updateUser } from "@/db/db";
 import { ipcMain } from "electron";
 import {
   USER_CREATE_CHANNEL,
   USER_READ_CHANNEL,
   USER_READ_ONE_CHANNEL,
-  USER_UPDATE_FAMILY_CHANNEL,
+  USER_UPDATE_CHANNEL,
 } from "./user-channels";
 
 export function addUserEventListeners() {
@@ -30,9 +24,9 @@ export function addUserEventListeners() {
       return { success: false, error };
     }
   });
-  ipcMain.handle(USER_UPDATE_FAMILY_CHANNEL, (_event, id, data) => {
+  ipcMain.handle(USER_READ_ONE_CHANNEL, (_event, id) => {
     try {
-      const user = updateUserFamily(id, data);
+      const user = readOneUser(id);
       if (!user) {
         throw new Error("Không tìm thấy người dùng id " + id);
       }
@@ -41,9 +35,9 @@ export function addUserEventListeners() {
       return { success: false, error };
     }
   });
-  ipcMain.handle(USER_READ_ONE_CHANNEL, (_event, id) => {
+  ipcMain.handle(USER_UPDATE_CHANNEL, (_event, id, data) => {
     try {
-      const user = readOneUser(id);
+      const user = updateUser(id, data);
       if (!user) {
         throw new Error("Không tìm thấy người dùng id " + id);
       }

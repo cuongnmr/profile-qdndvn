@@ -1,3 +1,4 @@
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -9,29 +10,11 @@ import {
 } from "@/components/ui/table";
 import { readUser } from "@/helpers/user-helper";
 import { User } from "@/types/user";
-import { format } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
-import { fullColumns } from "./columns-def";
-import { Input } from "@/components/ui/input";
 import { removeDiacritics } from "@/utils/text";
 import { useNavigate } from "@tanstack/react-router";
-
-function cellValue(key: string, value: string) {
-  const doandang: Record<string, string> = {
-    doanvien: "Đoàn viên",
-    dangvien: "Đảng viên",
-  };
-  switch (key) {
-    case "ngaysinh":
-      return format(Number(value), "dd/MM/yyyy");
-    case "vaodoan":
-      return value ? format(Number(value), "dd/MM/yyyy") : value;
-    case "doandang":
-      return value ? doandang[value] : value;
-    default:
-      return value;
-  }
-}
+import { useEffect, useMemo, useState } from "react";
+import { fullColumns } from "./columns-def";
+import { getValue } from "@/utils/mapping";
 
 function UsersListPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -77,7 +60,7 @@ function UsersListPage() {
                       navigate({ to: "/user-detail/" + item.id })
                     }
                   >
-                    {cellValue(col[0], value)}
+                    {getValue(col[0], value)}
                   </TableCell>
                 );
               })}

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { updateUserFamily } from "@/helpers/user-helper";
+import { updateUser } from "@/helpers/user-helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -52,7 +52,7 @@ export default function FamilyForm({ onReturn, userId }: Props) {
       if (!userId) {
         throw new Error("Chưa cung cấp user id!");
       }
-      await updateUserFamily(userId, values);
+      await updateUser(userId, values);
       toast.success("Lưu thành công!");
     } catch (error) {
       if (error instanceof Error) {

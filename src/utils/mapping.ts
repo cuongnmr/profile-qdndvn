@@ -61,3 +61,22 @@ export const mapDoanDang = (doandang: string) => {
   };
   return mapping[doandang] || doandang;
 };
+
+export function getValue(key: string, input?: string) {
+  if (!input) {
+    return "Chưa có thông tin";
+  }
+  switch (key) {
+    case "capbac":
+      return mapCapBac(input);
+    case "chucvu":
+      return mapChucVu(input);
+    case "donvi":
+      return mapDonVi(input);
+    case "doandang":
+      return mapDoanDang(input);
+
+    default:
+      return input;
+  }
+}

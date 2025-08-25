@@ -72,11 +72,6 @@ interface Props {
   defaultData: any;
 }
 
-const dateToString = (value?: string) => {
-  if (value) return String(new Date(value).getTime());
-  return undefined;
-};
-
 export default function PersonalForm({ onFinish, defaultData }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,13 +95,7 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
       if (defaultData && defaultData.id) {
         onFinish((prev: any) => ({ ...prev, ...values }));
       } else {
-        const user = await createUser(
-          Object.assign(values, {
-            ngaysinh: dateToString(values.ngaysinh),
-            vaodoan: dateToString(values.vaodoan),
-            vaodang: dateToString(values.vaodang),
-          }),
-        );
+        const user = await createUser(values);
         onFinish((prev: any) => ({ ...prev, ...values, id: user.id }));
       }
       toast.success("Lưu thành công");
@@ -153,7 +142,7 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
             <FormItem className="flex flex-col">
               <FormLabel>Ngày sinh</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input type="text" placeholder="Nhập thông tin" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -315,40 +304,35 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="vanhoa"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Văn hóa</FormLabel>
-              <FormControl>
-                <InputOTP maxLength={2} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                  </InputOTPGroup>
-                  <span>/</span>
-                  <div className="text-sm">12</div>
-                </InputOTP>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="thanhphan"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Thành phần gia đình</FormLabel>
-              <FormControl>
-                <Input placeholder={placeholder} type="text" {...field} />
-              </FormControl>
+        <div className="grid grid-cols-2 items-start gap-4">
+          <FormField
+            control={form.control}
+            name="vanhoa"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Văn hóa</FormLabel>
+                <FormControl>
+                  <Input placeholder={placeholder} type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="thanhphan"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Thành phần gia đình</FormLabel>
+                <FormControl>
+                  <Input placeholder={placeholder} type="text" {...field} />
+                </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -406,7 +390,8 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
               <FormLabel>Ngày vào đoàn</FormLabel>
               <FormControl>
                 <Input
-                  type="date"
+                  type="text"
+                  placeholder="Nhập thông tin"
                   value={field.value}
                   onChange={field.onChange}
                 />
@@ -426,7 +411,8 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
                   <FormLabel>Ngày vào Đảng</FormLabel>
                   <FormControl>
                     <Input
-                      type="date"
+                      type="text"
+                      placeholder="Nhập thông tin"
                       value={field.value}
                       onChange={field.onChange}
                       disabled={doanvien}

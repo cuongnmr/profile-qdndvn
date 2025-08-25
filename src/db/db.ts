@@ -53,18 +53,14 @@ export function getUsers(): User[] {
   return db.data.users;
 }
 
-// cập nhật thông tin gia đình user
-export function updateUserFamily(userId: string, dto: any): User | null {
+// cập nhật thông tin user
+export function updateUser(userId: string, dto: any): User | null {
   const db = getDB();
   const user = db.data.users.find((u) => u.id === userId);
   if (user) {
-    // Cập nhật dữ liệu
-    console.log(dto, userId);
     Object.assign(user, dto);
-
     // Ghi lại vào file
     db.write();
-
     return user;
   } else {
     return null;
