@@ -26,7 +26,7 @@ import { removeDiacritics } from "@/utils/text";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useNavigate } from "@tanstack/react-router";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { fullColumns } from "./columns-def";
+import { userProps } from "@/constant/user-props";
 
 const mapping: Record<string, string> = {
   bienche: "Biên chế",
@@ -136,8 +136,8 @@ function UsersListPage() {
               <Checkbox />
             </TableHead>
             <TableHead>STT</TableHead>
-            {fullColumns.map((item) => (
-              <TableHead key={item[0]}>{item[1]}</TableHead>
+            {Object.entries(userProps).map(([key, value]) => (
+              <TableHead key={key}>{value}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -151,17 +151,17 @@ function UsersListPage() {
                 />
               </TableCell>
               <TableCell>{idx + 1}</TableCell>
-              {fullColumns.map((col) => {
+              {Object.entries(userProps).map(([key]) => {
                 // @ts-expect-error type
-                const value = item[col[0]];
+                const value = item[key];
                 return (
                   <TableCell
-                    key={item.id + col[0]}
+                    key={item.id + key}
                     onDoubleClick={() =>
                       navigate({ to: "/user-detail/" + item.id })
                     }
                   >
-                    {getValue(col[0], value)}
+                    {getValue(key, value)}
                   </TableCell>
                 );
               })}

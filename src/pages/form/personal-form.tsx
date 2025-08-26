@@ -66,6 +66,8 @@ const formSchema = z.object({
   phatgiamcaitao: z.string().optional(),
   tomtatcongtac: z.string().optional(),
   bienche: z.string().optional(),
+  trinhdo: z.string().optional(),
+  quequan: z.string({ error }),
 });
 
 interface Props {
@@ -349,6 +351,40 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="trinhdo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Trình độ</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Ví dụ: Đại học FPT"
+                  type="text"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>Trung cấp, Cao Đẳng, Đại học</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="quequan"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Quê quán</FormLabel>
+              <FormControl>
+                <Input placeholder={placeholder} type="text" {...field} />
+              </FormControl>
+              <FormDescription>Xóm, xã, tỉnh</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}

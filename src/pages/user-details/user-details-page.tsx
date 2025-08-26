@@ -12,7 +12,7 @@ import { deleteUser, readUserById, updateUser } from "@/helpers/user-helper";
 import { useNavigate, useParams, useRouter } from "@tanstack/react-router";
 import { ArrowLeft, Download, Edit, Trash2, X } from "lucide-react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { userProps } from "./form-schema";
+import { userProps } from "@/constant/user-props";
 import { getValue } from "@/utils/mapping";
 
 async function fetchUser(userId: string) {

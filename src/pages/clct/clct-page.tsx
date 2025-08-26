@@ -9,12 +9,12 @@ import {
 import { readUser } from "@/helpers/user-helper";
 import { User } from "@/types/user";
 import { mapBienChe, mapCapBac, mapChucVu } from "@/utils/mapping";
-import { cn } from "@/utils/tailwind";
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   counBt,
   countDangVien,
   countDoanVien,
+  countHSQCS,
   countQNCN,
   countSQ,
   countSQCH,
@@ -22,7 +22,11 @@ import {
   findBt,
   getBCH,
   getUniqueBienche,
+  groupByType,
+  nhomTheoNamNN,
+  nhomTheoQueQuan,
   sortArrayString,
+  thongKeChucVuQNCN,
 } from "./clct";
 
 export default function CLCTPage() {
@@ -43,38 +47,46 @@ export default function CLCTPage() {
           <CardDescription>Đại đội 4</CardDescription>
           <CardAction>Card Action</CardAction>
         </CardHeader>
-        <CardContent className="text-sm">
-          <QuanSo className="py-3" users={users} />
-          <hr />
-          <section className="py-3">
-            <h1 className="mb-3 font-bold">Ban chỉ huy Đại đội</h1>
-            <ol className="space-y-3">
-              {getBCH(users).map((item) => (
-                <li key={item.id}>{capBacTenChucVu(item)}</li>
-              ))}
-            </ol>
-          </section>
-          <hr />
-          <section className="space-y-3 py-3">
-            <h1 className="font-bold">Biên chế hiện tại Đại đội 4</h1>
-            <p>Ban chỉ huy và {b.length} Trung đội gồm:</p>
-            <ol className="space-y-3">
-              {b.map((item) => (
-                <li key={item}>
-                  <div className="mb-3 font-medium">{mapBienChe(item)}</div>
-                  <QuanSo
-                    className="pl-3"
-                    users={users.filter((i) => i.bienche === item)}
-                  >
-                    <li>
-                      Trung đội trưởng: {counBt(users, item)} đồng chí;{" "}
-                      {capBacTenChucVu(findBt(users, item))}
-                    </li>
-                  </QuanSo>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CardContent>
+          <article className="prose max-w-none">
+            <ul>
+              <li>Tổng quân số: {users.length} đồng chí</li>
+              <li>Sỹ quan: {countSQ(users)} đồng chí</li>
+              <li>QNCN: {countQNCN(users)} đồng chí</li>
+              <li>Đảng viên: {countDangVien(users)} đồng chí</li>
+              <li>Đoàn viên: {countDoanVien(users)} đồng chí</li>
+            </ul>
+            <section>
+              <h3>Ban chỉ huy Đại đội</h3>
+              <ol>
+                {getBCH(users).map((item) => (
+                  <li key={item.id}>{capBacTenChucVu(item)}</li>
+                ))}
+              </ol>
+            </section>
+            <section>
+              <h3>Biên chế hiện tại Đại đội 4</h3>
+              <p>Ban chỉ huy và {b.length} Trung đội gồm:</p>
+              <ol>
+                {b.map((item) => (
+                  <li key={item}>
+                    <div className="mb-3 font-medium">{mapBienChe(item)}</div>
+                    <ul>
+                      <li>Tổng quân số: {users.length} đồng chí</li>
+                      <li>Sỹ quan: {countSQ(users)} đồng chí</li>
+                      <li>QNCN: {countQNCN(users)} đồng chí</li>
+                      <li>Đảng viên: {countDangVien(users)} đồng chí</li>
+                      <li>Đoàn viên: {countDoanVien(users)} đồng chí</li>
+                      <li>
+                        Trung đội trưởng: {counBt(users, item)} đồng chí;{" "}
+                        {capBacTenChucVu(findBt(users, item))}
+                      </li>
+                    </ul>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </article>
         </CardContent>
       </Card>
       <Card>
@@ -82,24 +94,58 @@ export default function CLCTPage() {
           <CardTitle>Chất lượng cán bộ, QNCN, HSQ - CS</CardTitle>
           <CardDescription>Chất lượng cán bộ, QNCN, HSQ - CS</CardDescription>
         </CardHeader>
-        <CardContent className="text-sm">
-          <ol className="space-y-3">
-            <li>
-              <div>Sỹ quan: {countSQ(users)} đồng chí</div>
-              <ul className="pl-3">
-                <li>SQCH: {countSQCH(users)} đồng chí</li>
-                <li>Trình độ cao đẳng: {countTrinhDo(users, "cd")} đồng chí</li>
-                <li>
-                  Cán bộ chính trị:{" "}
-                  {users.reduce((acc, curr) => {
-                    return acc + (curr.chucvu.includes("ctv") ? 1 : 0);
-                  }, 0)}{" "}
-                  đồng chí
-                </li>
-              </ul>
-            </li>
-            <li>Nhân viên chuyên môn kỹ thuật: {countQNCN(users)}</li>
-          </ol>
+        <CardContent>
+          <article className="prose max-w-none">
+            <ol>
+              <li>
+                <div>Sỹ quan: {countSQ(users)} đồng chí</div>
+                <ul>
+                  <li>SQCH: {countSQCH(users)} đồng chí</li>
+                  <li>
+                    Trình độ cao đẳng: {countTrinhDo(users, "cd")} đồng chí
+                  </li>
+                  <li>
+                    Cán bộ chính trị:{" "}
+                    {users.reduce((acc, curr) => {
+                      return acc + (curr.chucvu.includes("ctv") ? 1 : 0);
+                    }, 0)}{" "}
+                    đồng chí
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div>Nhân viên chuyên môn kỹ thuật: {countQNCN(users)}</div>
+                <ul>
+                  {Object.entries(thongKeChucVuQNCN(users)).map(
+                    ([key, value], idx) => (
+                      <li key={idx}>
+                        {key}: {value}
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </li>
+              <li>
+                <div>Hạ sỹ quan - Chiến sỹ: {countHSQCS(users)}</div>
+                <ul>
+                  {Object.entries(nhomTheoNamNN(users)).map(([year, users]) => {
+                    return (
+                      <li key={year}>
+                        <div>
+                          Nhập ngũ năm {year}: {users.length}
+                        </div>
+                        <ThongKe users={users} />
+                      </li>
+                    );
+                  })}
+                  <li>
+                    <div>Tổng đơn vị</div>
+                    <ThongKe users={users} />
+                  </li>
+                </ul>
+              </li>
+            </ol>
+          </article>
         </CardContent>
       </Card>
     </div>
@@ -115,17 +161,94 @@ function capBacTenChucVu(user?: User) {
 
 interface Props {
   users: User[];
-  className?: string;
 }
-function QuanSo({ users, className, children }: PropsWithChildren<Props>) {
+function ThongKe({ users }: Props) {
+  const usersKK = users.filter((user) => user.khokhan);
+  const usersBoChet = users.filter((user) => user.nammatbo);
+  const usersMeChet = users.filter((user) => user.nammatme);
+  const usersBomelyhon = users.filter((user) => user.bomelyhon);
   return (
-    <ul className={cn("space-y-3", className)}>
-      <li>Tổng quân số: {users.length} đồng chí</li>
-      <li>Sỹ quan: {countSQ(users)} đồng chí</li>
-      <li>QNCN: {countQNCN(users)} đồng chí</li>
-      <li>Đảng viên: {countDangVien(users)} đồng chí</li>
-      <li>Đoàn viên: {countDoanVien(users)} đồng chí</li>
-      {children}
+    <ul>
+      <li className="font-bold">Quê quán</li>
+      <ul>
+        {Object.entries(nhomTheoQueQuan(users)).map(([key, value], idx) => (
+          <li key={idx}>
+            {key}: {value.length}
+          </li>
+        ))}
+      </ul>
+      <li className="font-bold">Dân tộc</li>
+      <ul>
+        {Object.entries(groupByType(users, "dantoc")).map(
+          ([key, value], idx) => (
+            <li key={idx}>
+              {key}: {value.length}
+            </li>
+          ),
+        )}
+      </ul>
+      <li className="font-bold">Tôn giáo</li>
+      <ul>
+        {Object.entries(groupByType(users, "tongiao")).map(
+          ([key, value], idx) => (
+            <li key={idx}>
+              {key}: {value.length} ({value.map((user) => user.hoten + ", ")})
+            </li>
+          ),
+        )}
+      </ul>
+      <li className="font-bold">Học vấn</li>
+      <ul>
+        {Object.entries(groupByType(users, "vanhoa")).map(
+          ([key, value], idx) => (
+            <li key={idx}>
+              {key}: {value.length} ({value.map((user) => user.hoten + ", ")})
+            </li>
+          ),
+        )}
+      </ul>
+      <li className="font-bold">Trình độ</li>
+      <ul>
+        {Object.entries({ dh: "Đại học", cd: "Cao Đẳng", tc: "Trung cấp" }).map(
+          ([key, value]) => (
+            <li key={key}>
+              {value}: {countTrinhDo(users, key)}
+            </li>
+          ),
+        )}
+      </ul>
+      <li className="font-bold">Hoàn cảnh khó khăn: {usersKK.length}</li>
+      <ul>
+        {usersKK.map((user) => (
+          <li key={user.id}>
+            {user.hoten}: {user.khokhan}
+          </li>
+        ))}
+      </ul>
+      <li className="font-bold">Bố chết: {usersBoChet.length}</li>
+      <ul>
+        {usersBoChet.map((user) => (
+          <li key={user.id}>
+            {user.hoten}: Năm mất: {user.nammatbo}
+          </li>
+        ))}
+      </ul>
+      <li className="font-bold">Mẹ chết: {usersMeChet.length}</li>
+      <ul>
+        {usersMeChet.map((user) => (
+          <li key={user.id}>
+            {user.hoten}: Năm mất: {user.nammatme}
+          </li>
+        ))}
+      </ul>
+      <li className="font-bold">Bố mẹ ly hôn: {usersBomelyhon.length}</li>
+      <ul>
+        {usersBomelyhon.map((user) => (
+          <li key={user.id}>
+            {user.hoten}: {user.bomelyhon}
+          </li>
+        ))}
+      </ul>
     </ul>
   );
 }

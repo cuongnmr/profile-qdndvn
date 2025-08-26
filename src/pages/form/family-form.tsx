@@ -34,6 +34,7 @@ const formSchema = z.object({
   truquanme: z.string().optional(),
   con: z.string().optional(),
   anhchiem: z.string().optional(),
+  bomelyhon: z.string().optional(),
 });
 
 const placeholder = "Nhập thông tin";
@@ -353,6 +354,28 @@ export default function FamilyForm({ onReturn, userId }: Props) {
               </FormControl>
               <FormDescription>
                 Ví dụ: Con trai Nguyễn Văn A, 2020
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="bomelyhon"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bố mẹ ly hôn?</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Họ tên, năm sinh"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                Ly hôn năm? nhà có mất anh chị em? Bản thân đang ở với ai? Anh
+                chị em đang ở với ai?
               </FormDescription>
               <FormMessage />
             </FormItem>

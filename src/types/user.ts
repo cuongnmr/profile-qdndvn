@@ -30,6 +30,7 @@ interface Personal {
   tomtatcongtac?: string;
   bienche?: string;
   trinhdo?: string;
+  quequan: string;
 }
 
 interface Parent {
@@ -47,6 +48,7 @@ interface Parent {
   nammatme?: string;
   quequanme?: string;
   truquanme?: string;
+  bomelyhon?: string;
 }
 
 export type User = Personal & Parent;
