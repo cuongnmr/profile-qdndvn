@@ -1,6 +1,5 @@
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -11,7 +10,6 @@ import { User } from "@/types/user";
 import { mapBienChe, mapCapBac, mapChucVu } from "@/utils/mapping";
 import { useEffect, useMemo, useState } from "react";
 import {
-  counBt,
   countDangVien,
   countDoanVien,
   countHSQCS,
@@ -36,16 +34,26 @@ export default function CLCTPage() {
       setUsers(res);
     });
   }, []);
-  const b = useMemo(() => sortArrayString(getUniqueBienche(users)), [users]);
+  const bienche = useMemo(() => {
+    const bcUnique = sortArrayString(getUniqueBienche(users));
+    return bcUnique.reduce(
+      (acc, curr) => {
+        acc[curr] = [];
+        users.forEach((user) => {
+          if (user.bienche === curr) acc[curr].push(user);
+        });
+        return acc;
+      },
+      {} as Record<string, User[]>,
+    );
+  }, [users]);
 
   return (
     <div className="space-y-3">
-      <h1 className="text-3xl font-bold">Chất lượng chính trị Đại đội 4</h1>
       <Card>
         <CardHeader>
           <CardTitle>Quân số và biên chế</CardTitle>
           <CardDescription>Đại đội 4</CardDescription>
-          <CardAction>Card Action</CardAction>
         </CardHeader>
         <CardContent>
           <article className="prose max-w-none">
@@ -57,7 +65,7 @@ export default function CLCTPage() {
               <li>Đoàn viên: {countDoanVien(users)} đồng chí</li>
             </ul>
             <section>
-              <h3>Ban chỉ huy Đại đội</h3>
+              <h4>Ban chỉ huy Đại đội</h4>
               <ol>
                 {getBCH(users).map((item) => (
                   <li key={item.id}>{capBacTenChucVu(item)}</li>
@@ -65,12 +73,12 @@ export default function CLCTPage() {
               </ol>
             </section>
             <section>
-              <h3>Biên chế hiện tại Đại đội 4</h3>
-              <p>Ban chỉ huy và {b.length} Trung đội gồm:</p>
+              <h4>Biên chế hiện tại Đại đội 4</h4>
+              <p>Ban chỉ huy và {Object.keys(bienche).length} Trung đội gồm:</p>
               <ol>
-                {b.map((item) => (
-                  <li key={item}>
-                    <div className="mb-3 font-medium">{mapBienChe(item)}</div>
+                {Object.entries(bienche).map(([key, users]) => (
+                  <li key={key}>
+                    <div className="mb-3 font-medium">{mapBienChe(key)}</div>
                     <ul>
                       <li>Tổng quân số: {users.length} đồng chí</li>
                       <li>Sỹ quan: {countSQ(users)} đồng chí</li>
@@ -78,8 +86,7 @@ export default function CLCTPage() {
                       <li>Đảng viên: {countDangVien(users)} đồng chí</li>
                       <li>Đoàn viên: {countDoanVien(users)} đồng chí</li>
                       <li>
-                        Trung đội trưởng: {counBt(users, item)} đồng chí;{" "}
-                        {capBacTenChucVu(findBt(users, item))}
+                        Trung đội trưởng: {capBacTenChucVu(findBt(users))}
                       </li>
                     </ul>
                   </li>

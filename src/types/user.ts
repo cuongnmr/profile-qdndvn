@@ -30,6 +30,7 @@ interface Personal {
   tomtatcongtac?: string;
   bienche?: string;
   trinhdo?: string;
+  tentruong?: string;
   quequan: string;
 }
 

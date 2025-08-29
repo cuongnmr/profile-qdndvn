@@ -7,6 +7,7 @@ export const userProps: Record<string, string> = {
   donvi: "Đơn vị",
   vanhoa: "Văn hóa",
   trinhdo: "Trình độ",
+  tentruong: "Tên trường",
   vaodoan: "Ngày vào Đoàn",
   vaodang: "Ngày vào Đảng",
   dantoc: "Dân tộc",

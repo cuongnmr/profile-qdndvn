@@ -155,9 +155,9 @@ export function counBt(users: User[], b: string): number {
   }, 0);
 }
 
-/** Tìm bt */
-export function findBt(users: User[], b: string) {
-  return users.find((item) => item.bienche === b && item.chucvu === "bt");
+/** Tìm bt trong trung đội */
+export function findBt(users: User[]) {
+  return users.find((item) => item.chucvu === "bt");
 }
 
 /** Tìm chỉ huy */

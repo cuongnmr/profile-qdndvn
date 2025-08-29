@@ -67,6 +67,7 @@ const formSchema = z.object({
   tomtatcongtac: z.string().optional(),
   bienche: z.string().optional(),
   trinhdo: z.string().optional(),
+  tentruong: z.string().optional(),
   quequan: z.string({ error }),
 });
 
@@ -352,24 +353,59 @@ export default function PersonalForm({ onFinish, defaultData }: Props) {
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="trinhdo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Trình độ</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Ví dụ: Đại học FPT"
-                  type="text"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>Trung cấp, Cao Đẳng, Đại học</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-4">
+            <FormField
+              control={form.control}
+              name="trinhdo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Trình độ</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {["Trung cấp", "Cao Đẳng", "Đại học"].map((item) => (
+                        <SelectItem key={item} value={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="col-span-8">
+            <FormField
+              control={form.control}
+              name="tentruong"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tên trường</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Ví dụ: Đại học FPT"
+                      type="text"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="col-span-12">
+            <FormDescription>Trung cấp, Cao Đẳng, Đại học</FormDescription>
+          </div>
+        </div>
 
         <FormField
           control={form.control}
